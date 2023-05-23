@@ -1,25 +1,22 @@
 import express from "express";
-import path ,{dirname} from "path"
-import {fileURLToPath} from "url"
-import {engine, create} from "express-handlebars"
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import {create } from "express-handlebars";
+import ProductRoutes from "./routes/product.js"
+import AuthRoutes from "./routes/need.js"
+
+
 const app = express();
+
 const hbs = create({
-  defaultLayout: "main",
-  extname:"hbs"
-})
+ defaultLayout: "main", extname: "hbs",
+});
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
+app.set("views", "./views");
 
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-app.set('views', './views');
 
-app.get('/', (req, res)=>{
- res.render("index")
-})
+app.use(AuthRoutes)
+app.use(ProductRoutes)
 
-app.get('/about', (req, res)=>{
-  res.render("about")
-})
+
 const PORT = process.env.PORT || 4200;
 app.listen(PORT, () => console.log(`${PORT} port started`));
